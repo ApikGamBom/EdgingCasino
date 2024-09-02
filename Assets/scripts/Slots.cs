@@ -1,63 +1,68 @@
-﻿using System.Collections;  // Required for IEnumerator
-using UnityEngine;  // Required for Unity components
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class SlotMachine : MonoBehaviour
+public class Slots : MonoBehaviour
 {
-    public Transform[] wheels;  // Array of the three wheels
-    public float spinDuration = 3f;  // Time duration for how long the wheels spin
-    private bool isSpinning = false;
+    public Text wheel1Text;  // UI Text element for Wheel 1
+    public Text wheel2Text;  // UI Text element for Wheel 2
+    public Text wheel3Text;  // UI Text element for Wheel 3
 
-    void Update()
+    public int numberOfSides = 11; // Number of sides on each wheel (0 to 10)
+    public float spinTime = 2.0f;  // Duration for the spin animation
+
+    private int wheel1Result;
+    private int wheel2Result;
+    private int wheel3Result;
+
+    // Called when the "Spin" button is clicked
+    public void Spin()
     {
-        if (Input.GetKeyDown(KeyCode.F) && !isSpinning)
-        {
-            StartCoroutine(SpinWheels());
-        }
+        // Start the coroutine to spin the wheels
+        StartCoroutine(SpinWheels());
     }
 
-    IEnumerator SpinWheels()
+    private IEnumerator SpinWheels()
     {
-        isSpinning = true;
+        // Get random results for each wheel
+        wheel1Result = Random.Range(0, numberOfSides);
+        wheel2Result = Random.Range(0, numberOfSides);
+        wheel3Result = Random.Range(0, numberOfSides);
 
-        // Start all wheels spinning
-        for (int i = 0; i < wheels.Length; i++)
+        float elapsedTime = 0f;
+
+        // Perform the spin animation over 'spinTime' seconds
+        while (elapsedTime < spinTime)
         {
-            StartCoroutine(SpinWheel(wheels[i], spinDuration + i * 0.5f));
+            elapsedTime += Time.deltaTime;
+
+            // Animate by updating wheel texts to random values during the spin
+            wheel1Text.text = Random.Range(0, numberOfSides).ToString();
+            wheel2Text.text = Random.Range(0, numberOfSides).ToString();
+            wheel3Text.text = Random.Range(0, numberOfSides).ToString();
+
+            yield return null; // Wait for the next frame
         }
 
-        // Wait until all wheels have stopped spinning
-        yield return new WaitForSeconds(spinDuration + 1.5f);
-        isSpinning = false;
+        // After the spin ends, display the final results
+        wheel1Text.text = wheel1Result.ToString();
+        wheel2Text.text = wheel2Result.ToString();
+        wheel3Text.text = wheel3Result.ToString();
+
+        // Check for any winning conditions
+        CheckWin();
     }
 
-    IEnumerator SpinWheel(Transform wheel, float duration)
+    // Add logic for winning conditions
+    private void CheckWin()
     {
-        float time = 0f;
-        float speed = 720f; // Set your desired rotation speed
-        while (time < duration)
+        if (wheel1Result == wheel2Result && wheel2Result == wheel3Result)
         {
-            time += Time.deltaTime;
-            // Rotate the wheel around the Y-axis only
-            wheel.Rotate(Vector3.up * speed * Time.deltaTime);
-            yield return null;
+            Debug.Log("Jackpot! All wheels match!");
         }
-
-        // Stop the wheel and align it to the nearest face
-        AlignWheelToFace(wheel);
-    }
-
-    void AlignWheelToFace(Transform wheel)
-    {
-        // Get the current Y-axis rotation
-        float yAngle = wheel.eulerAngles.y;
-
-        // Calculate the angle per face based on 11 faces
-        float anglePerFace = 360f / 11f;
-
-        // Find the closest face's angle (multiple of anglePerFace)
-        float closestAngle = Mathf.Round(yAngle / anglePerFace) * anglePerFace;
-
-        // Apply the closest face angle while locking X and Z axes to their original values (likely 0f)
-        wheel.eulerAngles = new Vector3(0f, closestAngle, 90f);  // Only modify the Y-axis
+        else
+        {
+            Debug.Log("Try again!");
+        }
     }
 }

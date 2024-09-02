@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.172768, g: 0.21589169, b: 0.29782546, a: 1}
+  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1676,7 +1676,7 @@ GameObject:
   - component: {fileID: 664051679}
   - component: {fileID: 664051678}
   - component: {fileID: 664051677}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1833,7 +1833,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 303a9deaec83cdb41a3f8be343adcfdb, type: 2}
+  - {fileID: 2100000, guid: 276b65b78947eb940a630a92745156ad, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2596,7 +2596,7 @@ GameObject:
   - component: {fileID: 1093292832}
   - component: {fileID: 1093292831}
   - component: {fileID: 1093292830}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3100,7 +3100,7 @@ GameObject:
   - component: {fileID: 1270187104}
   - component: {fileID: 1270187103}
   - component: {fileID: 1270187102}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5107,11 +5107,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 947eb563ded564641b23f3d994642476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheels:
-  - {fileID: 684387616}
-  - {fileID: 407007515}
-  - {fileID: 1475226255}
-  spinDuration: 3
+  wheel1Text: {fileID: 0}
+  wheel2Text: {fileID: 0}
+  wheel3Text: {fileID: 0}
+  numberOfSides: 11
+  spinTime: 2
 --- !u!1 &1440983481
 GameObject:
   m_ObjectHideFlags: 0
@@ -6225,7 +6225,7 @@ GameObject:
   - component: {fileID: 2057338737}
   - component: {fileID: 2057338736}
   - component: {fileID: 2057338735}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
