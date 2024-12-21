@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 //using UnityEngine.InputSystem.LowLevel;
 
@@ -9,13 +10,30 @@ public class thirdPersonMovement : MonoBehaviour
     public CharacterController controller;
     public Transform cam;
 
-    public float speed = 6f;
+    public float speed = 4f;
 
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
 
     #endregion
-//  \\-------=!=-------//
+    //  \\-------=!=-------//
+
+    // animation
+    public Animator playerAnimator;
+    public bool walking;
+    public bool walkingBackwards;
+
+    public KeyCode moveForward = KeyCode.W;
+    public KeyCode moveBackwards = KeyCode.S;
+    public KeyCode moveLeft = KeyCode.A;
+    public KeyCode moveRight = KeyCode.D;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode jumpKey = KeyCode.Space;
+
+    public float jumpStrength = 5f;
+
+    public float run_speed = 8f;
+    public float walk_speed = 4f;
 
     public KeyCode lockMouse = KeyCode.R;
     public bool mouseLock;
@@ -33,10 +51,45 @@ public class thirdPersonMovement : MonoBehaviour
         Cursor.visible = false;
     }
 
-    Vector3 velocity;
+    public Vector3 velocity;
+
+    public void Jump()
+    {
+        velocity.y = jumpStrength;
+        // Debug.Log("Delay!");
+    }
 
     void Update()
     {
+
+        if (Input.GetKey(moveForward) || Input.GetKey(moveLeft) || Input.GetKey(moveRight) || Input.GetKey(moveBackwards))
+        {
+            playerAnimator.SetTrigger("jog");
+            playerAnimator.ResetTrigger("idle");
+            walking = true;
+        }
+
+        if (!Input.GetKey(moveForward) && !Input.GetKey(moveLeft) && !Input.GetKey(moveRight) && !Input.GetKey(moveBackwards))
+        {
+            playerAnimator.SetTrigger("idle"); 
+            playerAnimator.ResetTrigger("jog");
+            walking = false;
+        }
+
+        //Sprint animations
+        if (Input.GetKey(sprintKey) && !walkingBackwards && walking)
+        {
+            speed = run_speed;
+            playerAnimator.SetTrigger("sprint");
+            playerAnimator.ResetTrigger("jog");
+        }
+        if (!Input.GetKey(sprintKey) && (Input.GetKey(moveForward) || Input.GetKey(moveLeft) || Input.GetKey(moveRight) || Input.GetKey(moveBackwards)))
+        {
+            speed = walk_speed;
+            playerAnimator.ResetTrigger("sprint");
+            playerAnimator.SetTrigger("jog");
+        }
+
 
         #region Gravity
 
@@ -44,7 +97,16 @@ public class thirdPersonMovement : MonoBehaviour
 
         if (isGrounded && velocity.y < 0)
         {
+            playerAnimator.ResetTrigger("stillJump");
+
             velocity.y = -2f;
+        }
+
+        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        {
+            playerAnimator.SetTrigger("stillJump");
+            
+            Invoke("Jump", 0.75f);
         }
 
         velocity.y += gravity * Time.deltaTime;
@@ -53,7 +115,7 @@ public class thirdPersonMovement : MonoBehaviour
 
 
 //      //-------==-------\\
-        #region Necessary movement |
+        #region  |Necessary movement|
 
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
